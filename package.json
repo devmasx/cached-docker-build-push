@@ -9,11 +9,11 @@
     "/dist"
   ],
   "dependencies": {
-    "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.1",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
+    "@actions/core": "^1.2.0",
     "@types/jest": "^24.0.23",
     "@zeit/ncc": "^0.20.5",
     "dotenv": "^8.2.0",
