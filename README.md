@@ -5,12 +5,13 @@ Execute docker build and push using docker caches.
 ## Github Action
 
 ```yml
-  - uses: devmasx/cached-docker-build-push@v0.1.0
-    with:
-      image_name: devmasx/project-name
-      cache_stage_target: builder
-      build_params: --build-arg=NPM_TOKEN=${{secrets.NPM_TOKEN}}
-``
+- uses: devmasx/cached-docker-build-push@v0.1.0
+  with:
+    image_name: devmasx/project-name
+    cache_stage_target: builder
+    build_params: --build-arg=NPM_TOKEN=${{secrets.NPM_TOKEN}}
+```
+
 ## Docker build
 
 Use the latest docker image for use as cache
@@ -63,6 +64,8 @@ docker build \
 docker push image-name:cache-builder
 docker push image-name:v1
 docker push image-name
+
+```
 
 ```
 
