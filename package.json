@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "@actions/exec": "^1.0.1",
+    "minimatch": "^3.0.4",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
@@ -18,18 +19,13 @@
     "@zeit/ncc": "^0.20.5",
     "dotenv": "^8.2.0",
     "jest": "^24.9.0",
-    "precommit": "^1.2.2",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.19.1"
   },
   "scripts": {
-    "precommit:setup": "./node_modules/precommit/bin/cli.js install",
     "build": "ncc build src/index.js -o dist",
     "test": "jest"
   },
-  "precommit": [
-    "npm run build",
-    "git add dist/*"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/devmasx/cached-docker-build-push.git"
