@@ -22,6 +22,7 @@
     "prettier": "^1.19.1"
   },
   "scripts": {
+    "precommit:setup": "./node_modules/precommit/bin/cli.js install",
     "build": "ncc build src/index.js -o dist",
     "test": "jest"
   },

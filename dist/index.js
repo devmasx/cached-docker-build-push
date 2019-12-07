@@ -662,11 +662,10 @@ const dockerBuildMultistageCache = ({
       --cache-from=${cacheImageName} \
       --target ${cacheStageTarget} \
       -t ${cacheImageName} \
-      -t ${imageName}:${imageTag} \
     .`,
     `docker build \
       ${buildParams} \
-      --cache-from=${imageName} \
+      --cache-from=${cacheImageName} \
       -t ${imageName} \
       -t ${imageName}:${imageTag} \
     .`,
@@ -1016,6 +1015,10 @@ const {
 
 const isMultiStage = params => params.cacheStageTarget;
 
+const getCacheImageName = ({ cacheImageName, imageName, cacheStageTarget }) => {
+  return cacheImageName || `${imageName}:cache-${cacheStageTarget}`;
+};
+
 const dockerBuild = async function(inputs) {
   let params = { ...inputs };
 
@@ -1024,7 +1027,7 @@ const dockerBuild = async function(inputs) {
   if (multiStage) {
     params = {
       ...params,
-      cacheImageName: cacheImageName || `${imageName}:cache-${cacheStageTarget}`
+      cacheImageName: getCacheImageName(params)
     };
 
     console.log("**Build with multiStage cache**");
