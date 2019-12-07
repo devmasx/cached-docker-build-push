@@ -1,0 +1,21 @@
+name: "dockerbuild-gcloud"
+description: "action for docker build and push to gloud container register"
+inputs:
+  image_name:
+    description: "image_name"
+    required: true
+  image_tag:
+    description: "image_tag, default $GITHUB_SHA"
+    required: false
+  cache_image_name:
+    description: "cache_image_name"
+    required: false
+  cache_stage_target:
+    description: "cache_stage_target"
+    required: false
+  build_params:
+    description: "Add multiple docker build params, example: --build-arg Dockerfile"
+    required: false
+runs:
+  using: "node12"
+  main: "dist/index.js"
