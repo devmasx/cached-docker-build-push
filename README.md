@@ -43,13 +43,13 @@ Docker Hub
     image_name: devmasx/project-name
 ```
 
+## Usage
+
 ## Docker build
 
 Use the latest docker image for use as cache
-Docker commands example:
 
 ```
-
 npx cached-docker-build-push --image-name image-name --image-tag v1
 
 ```
@@ -57,12 +57,10 @@ npx cached-docker-build-push --image-name image-name --image-tag v1
 Execute this docker commands:
 
 ```
-
 docker pull image-name || exit 0
 docker build --cache-from=image-name -t image-name -t image-name:v1
 docker push image-name:v1
 docker push image-name
-
 ```
 
 ## Docker build with multi stage
@@ -70,16 +68,14 @@ docker push image-name
 With multi stage we need to save the builder stage for use as cache. Use the flag `--cache-stage-target` for define the builder stage
 
 ```
-
 npx cached-docker-build-push --cache-stage-target=builder --image-name image-name --image-tag v1
-
 ```
 
 Execute this docker commands:
 
 ```
+docker pull image-name:cache-builder || exit 0
 
-docker pull image-name:cache-builder
 docker build \
  --cache-from=image-name:cache-builder \
  --target builder \
@@ -95,9 +91,10 @@ docker build \
 docker push image-name:cache-builder
 docker push image-name:v1
 docker push image-name
-
 ```
 
-```
+### See more
 
+```
+npx cached-docker-build-push --help
 ```
