@@ -987,7 +987,7 @@ const { dockerBuild } = __webpack_require__(846);
 
 async function run() {
   try {
-    dockerBuild({
+    await dockerBuild({
       imageName: core.getInput("image_name"),
       imageTag: core.getInput("image_tag") || process.env.GITHUB_SHA,
       cacheImageName: core.getInput("cache_image_name"),
