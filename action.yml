@@ -1,5 +1,5 @@
-name: "dockerbuild-gcloud"
-description: "action for docker build and push to gloud container register"
+name: "cached-docker-build-push"
+description: "Action for docker build and push with cache"
 inputs:
   image_name:
     description: "image_name"
@@ -19,3 +19,6 @@ inputs:
 runs:
   using: "node12"
   main: "dist/index.js"
+branding:
+  icon: "package"
+  color: "blue"
