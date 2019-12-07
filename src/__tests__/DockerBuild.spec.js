@@ -52,8 +52,8 @@ describe("dockerBuildMultistageCache", () => {
     expect(commands).toMatchInlineSnapshot(`
       Array [
         "docker pull image-name--builder",
-        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name--builder       --target development       -t image-name--builder       -t image-name:v1     .",
-        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name       -t image-name       -t image-name:v1     .",
+        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name--builder       --target development       -t image-name--builder     .",
+        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name--builder       -t image-name       -t image-name:v1     .",
         "docker push image-name--builder",
         "docker push image-name:v1",
         "docker push image-name",
