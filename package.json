@@ -34,7 +34,7 @@
     "type": "git",
     "url": "git+https://github.com/devmasx/cached-docker-build-push.git"
   },
-  "author": "",
+  "author": "Miguel Savignano",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/devmasx/cached-docker-build-push/issues"
