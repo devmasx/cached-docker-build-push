@@ -1,5 +1,5 @@
 name: "cached-docker-build-push"
-description: "Action for docker build and push with cache"
+description: "Execute docker build and push using docker caches (with multi stage)"
 inputs:
   image_name:
     description: "Image name, required"

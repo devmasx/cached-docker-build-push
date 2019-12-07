@@ -1,6 +1,6 @@
 # Cached docker build push
 
-Execute docker build and push using docker caches.
+Execute docker build and push using docker caches (with multi stage).
 
 ## Github Action
 
