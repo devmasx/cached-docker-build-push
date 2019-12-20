@@ -23,9 +23,8 @@ const getCacheImageName = ({ cacheImageName, imageName, cacheStageTarget }) => {
   return cacheImageName || `${imageName}:cache-${cacheStageTarget}`;
 };
 
-const dockerBuild = async function(inputs) {
+const getCommands = (inputs) => {
   let params = { ...inputs };
-
   params.cacheStageTarget = params.cacheStageTarget || tryFindStages()[0]
   params.cacheImageName = getCacheImageName(params)
   params.imageTag = params.imageTag || `${new Date().getTime()}`
@@ -40,20 +39,25 @@ const dockerBuild = async function(inputs) {
     console.log("**Build with latest cache**");
     commands = dockerBuildCache(params);
   }
+  return commands
+}
+
+const dockerBuild = async function(inputs) {
+  const commands = getCommands(inputs)
   console.log(commands)
 
-  // const [pullImage, ...syncCommands] = commands;
+  const [pullImage, ...syncCommands] = commands;
 
-  // // skip fail
-  // try {
-  //   await exec.exec(pullImage);
-  // } catch {}
+  // skip fail
+  try {
+    await exec.exec(pullImage);
+  } catch {}
 
-  // // sync execute
-  // for (let i = 0; i < syncCommands.length; i++) {
-  //   const command = syncCommands[i];
-  //   await exec.exec(command);
-  // }
+  // sync execute
+  for (let i = 0; i < syncCommands.length; i++) {
+    const command = syncCommands[i];
+    await exec.exec(command);
+  }
 };
 
-module.exports = { dockerBuild, tryFindStages };
+module.exports = { dockerBuild, tryFindStages, getCommands };
