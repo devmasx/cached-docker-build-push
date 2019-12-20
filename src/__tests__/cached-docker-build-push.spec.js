@@ -8,7 +8,7 @@ describe("tryFindStage", () => {
 
   it("dockerfile", () => {
     const name = tryFindStages("src/__tests__/fixtures/Dockerfile.dev")
-    expect(name).toEqual(["nodejs", "builder"])
+    expect(name).toEqual(["builder", "test"])
   })
 
   it("dockerfile", () => {
