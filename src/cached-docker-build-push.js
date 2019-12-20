@@ -1,4 +1,5 @@
 const exec = require("@actions/exec");
+const minimist = require("minimist");
 const fs = require("fs");
 const {
   dockerBuildCache,
@@ -25,7 +26,8 @@ const getCacheImageName = ({ cacheImageName, imageName, cacheStageTarget }) => {
 
 const getCommands = (inputs) => {
   let params = { ...inputs };
-  params.cacheStageTarget = params.cacheStageTarget || tryFindStages()[0]
+  const buildParams = minimist([inputs.buildParams]);
+  params.cacheStageTarget = params.cacheStageTarget || tryFindStages(buildParams.dockerfile)[0]
   params.cacheImageName = getCacheImageName(params)
   params.imageTag = params.imageTag || `${new Date().getTime()}`
 
