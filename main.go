@@ -34,7 +34,7 @@ func main() {
 			// }
 
 			// cmd := exec.Command(docker_bin_path, "docker build -t my-image .")
-			out, err := exec.Command("docker", "ps").Output()
+			out, err := exec.Command("docker ps").Output()
 			// err := cmd.Run();
 			if err != nil {
 				fmt.Println("ERROR", err)
