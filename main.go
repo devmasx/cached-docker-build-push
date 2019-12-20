@@ -23,8 +23,8 @@ func main() {
 		Action: func(c *cli.Context) error {
 
 			// docker_bin_path := "/usr/bin/docker"
-			// image_name := c.String("image-name")
-			// image_tag := c.String("image-tag")
+			image_name := c.String("image-name")
+			image_tag := c.String("image-tag")
 
 			// commnads := [4]string{
 			// 	fmt.Sprintf("docker pull %s", image_name),
@@ -34,8 +34,12 @@ func main() {
 			// }
 
 			// cmd := exec.Command(docker_bin_path, "docker build -t my-image .")
-			out, err := exec.Command("docker ps").Output()
-			// err := cmd.Run();
+			out, err := exec.Command("docker", "pull", image_name).Output()
+			out, err := exec.Command("docker", "build", "--cache-from", image_name, "-t", image_name, "-t", image_name, ":", image_tag).Output()
+
+			// 	fmt.Sprintf("docker build --cache-from=%s -t %s -t %s:%s .", image_name, image_name, image_name, image_tag),
+
+
 			if err != nil {
 				fmt.Println("ERROR", err)
 				log.Fatal(err);
