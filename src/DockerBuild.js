@@ -12,14 +12,16 @@ const dockerBuildCache = ({ imageName, imageTag, buildParams = "" }) => {
   ];
 };
 
-const dockerBuildCacheStep = ({target, name}, buildParams) => (
-  `docker build \
-  ${buildParams} \
-  --cache-from=${name} \
-  --target ${target} \
-  -t ${name} \
-.`
-)
+const dockerBuildCacheStep = ({ target, name }, buildParams, cacheStages) => {
+  const cacheFroms = cacheStages.map(({ name }) => `--cache-from=${name}`).join(' ')
+
+  return `docker build \
+    ${buildParams} \
+    ${cacheFroms} \
+    --target ${target} \
+    -t ${name} \
+  .`
+}
 
 const dockerBuildMultistageCache = ({
   imageName,
@@ -29,7 +31,7 @@ const dockerBuildMultistageCache = ({
 }) => {
   return [
     ...cacheStages.map(({ name }) => `docker pull ${name}`),
-    ...cacheStages.map(it => dockerBuildCacheStep(it, buildParams)),
+    ...cacheStages.map(it => dockerBuildCacheStep(it, buildParams, cacheStages)),
     ...cacheStages.map(({ name }) => `docker push ${name}`),
     `docker push ${imageName}:${imageTag}`,
     `docker push ${imageName}`
