@@ -57,22 +57,47 @@ const getCommands = (inputs) => {
   return commands
 }
 
+const parseCommands = (commands) => {
+  const pullCommands = []
+  const buildCommands = []
+  const pushCommands = []
+
+  commands.forEach(command => {
+    if (/docker pull/.test(command)) {
+      pullCommands.push(command)
+    } else if (/docker build/.test(command)) {
+      buildCommands.push(command)
+    } else {
+      pushCommands.push(command)
+    }
+  })
+
+  return { pullCommands, buildCommands, pushCommands }
+}
+
 const dockerBuild = async function(inputs) {
   const commands = getCommands(inputs)
   console.log(commands)
 
-  const [pullImage, ...syncCommands] = commands;
-
+  const { pullCommands, buildCommands, pushCommands } = parseCommands(commands)
   // skip fail
   try {
-    await exec.exec(pullImage);
+    for (let i = 0; i < pullCommands.length; i++) {
+      const command = pullCommands[i];
+      await exec.exec(command);
+    }
   } catch {}
 
   // sync execute
-  for (let i = 0; i < syncCommands.length; i++) {
-    const command = syncCommands[i];
+  for (let i = 0; i < buildCommands.length; i++) {
+    const command = buildCommands[i];
+    await exec.exec(command);
+  }
+
+  for (let i = 0; i < pushCommands.length; i++) {
+    const command = pushCommands[i];
     await exec.exec(command);
   }
 };
 
-module.exports = { dockerBuild, tryFindStages, getCommands };
+module.exports = { dockerBuild, tryFindStages, getCommands, parseCommands };
