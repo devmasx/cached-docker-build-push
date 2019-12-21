@@ -648,14 +648,16 @@ const dockerBuildCache = ({ imageName, imageTag, buildParams = "" }) => {
   ];
 };
 
-const dockerBuildCacheStep = ({target, name}, buildParams) => (
-  `docker build \
-  ${buildParams} \
-  --cache-from=${name} \
-  --target ${target} \
-  -t ${name} \
-.`
-)
+const dockerBuildCacheStep = ({ target, name }, buildParams, cacheStages) => {
+  const cacheFroms = cacheStages.map(({ name }) => `--cache-from=${name}`).join(' ')
+
+  return `docker build \
+    ${buildParams} \
+    ${cacheFroms} \
+    --target ${target} \
+    -t ${name} \
+  .`
+}
 
 const dockerBuildMultistageCache = ({
   imageName,
@@ -665,7 +667,7 @@ const dockerBuildMultistageCache = ({
 }) => {
   return [
     ...cacheStages.map(({ name }) => `docker pull ${name}`),
-    ...cacheStages.map(it => dockerBuildCacheStep(it, buildParams)),
+    ...cacheStages.map(it => dockerBuildCacheStep(it, buildParams, cacheStages)),
     ...cacheStages.map(({ name }) => `docker push ${name}`),
     `docker push ${imageName}:${imageTag}`,
     `docker push ${imageName}`
@@ -1227,13 +1229,15 @@ const { dockerBuild } = __webpack_require__(846);
 
 async function run() {
   try {
-    await dockerBuild({
-      imageName: core.getInput("image_name"),
-      imageTag: core.getInput("image_tag") || process.env.GITHUB_SHA,
-      cacheImageName: core.getInput("cache_image_name"),
-      cacheStageTarget: core.getInput("cache_stage_target"),
-      buildParams: core.getInput("build_params")
-    });
+    await core.group("DockerCache", () => {
+      return dockerBuild({
+        imageName: core.getInput("image_name"),
+        imageTag: core.getInput("image_tag") || process.env.GITHUB_SHA,
+        cacheImageName: core.getInput("cache_image_name"),
+        cacheStageTarget: core.getInput("cache_stage_target"),
+        buildParams: core.getInput("build_params")
+      });
+    })
   } catch (error) {
     core.setFailed(error.message);
   }
