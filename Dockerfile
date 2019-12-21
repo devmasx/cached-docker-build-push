@@ -1,11 +1,10 @@
-FROM golang:1-alpine3.10 as builder
+FROM node:lts-alpine
 
-RUN apk add git
-RUN go get github.com/urfave/cli
+WORKDIR /app
+COPY package.json package-lock.json /app/
+RUN npm ci
 
-COPY src .
+COPY . .
 
-CMD ["go", "run", "main.go"]
-
-FROM alpine3
-COPY --from=builder build /build
+CMD ["sh"]
+# CMD ["node", "/app/bin/cached-docker-build-push.js"]
