@@ -21,7 +21,8 @@
   },
   "scripts": {
     "build": "ncc build src/index.js -o dist",
-    "test": "jest"
+    "test": "jest",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
   },
   "repository": {
     "type": "git",
