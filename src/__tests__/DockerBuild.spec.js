@@ -53,7 +53,7 @@ describe("dockerBuildMultistageCache", () => {
       Array [
         "docker pull image-name:cache-builder",
         "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name:cache-builder       --target builder       -t image-name:cache-builder     .",
-        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name:cache-builder       -t image-name       -t image-name:v1     .",
+        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name:cache-builder       --cache-from=image-name       -t image-name       -t image-name:v1     .",
         "docker push image-name:cache-builder",
         "docker push image-name:v1",
         "docker push image-name",

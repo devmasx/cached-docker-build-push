@@ -30,6 +30,7 @@ const dockerBuildMultistageCache = ({
     `docker build \
       ${buildParams} \
       --cache-from=${cacheImageName} \
+      --cache-from=${imageName} \
       -t ${imageName} \
       -t ${imageName}:${imageTag} \
     .`,
