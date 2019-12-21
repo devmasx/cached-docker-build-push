@@ -648,29 +648,25 @@ const dockerBuildCache = ({ imageName, imageTag, buildParams = "" }) => {
   ];
 };
 
+const dockerBuildCacheStep = ({target, name}, buildParams) => (
+  `docker build \
+  ${buildParams} \
+  --cache-from=${name} \
+  --target ${target} \
+  -t ${name} \
+.`
+)
+
 const dockerBuildMultistageCache = ({
   imageName,
   imageTag,
-  cacheImageName,
-  cacheStageTarget,
+  cacheStages,
   buildParams = ""
 }) => {
   return [
-    `docker pull ${cacheImageName}`,
-    `docker build \
-      ${buildParams} \
-      --cache-from=${cacheImageName} \
-      --target ${cacheStageTarget} \
-      -t ${cacheImageName} \
-    .`,
-    `docker build \
-      ${buildParams} \
-      --cache-from=${cacheImageName} \
-      --cache-from=${imageName} \
-      -t ${imageName} \
-      -t ${imageName}:${imageTag} \
-    .`,
-    `docker push ${cacheImageName}`,
+    ...cacheStages.map(({ name }) => `docker pull ${name}`),
+    ...cacheStages.map(it => dockerBuildCacheStep(it, buildParams)),
+    ...cacheStages.map(({ name }) => `docker push ${name}`),
     `docker push ${imageName}:${imageTag}`,
     `docker push ${imageName}`
   ];
@@ -1266,7 +1262,7 @@ const {
   dockerBuildMultistageCache
 } = __webpack_require__(103);
 
-const isMultiStage = params => params.cacheStageTarget;
+const isMultiStage = params => params.cacheStages.length > 1;
 
 const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   const fileContent = fs.readFileSync(dockerfilePath, 'utf8')
@@ -1280,15 +1276,28 @@ const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   return stageName
 }
 
-const getCacheImageName = ({ cacheImageName, imageName, cacheStageTarget }) => {
-  return cacheImageName || `${imageName}:cache-${cacheStageTarget}`;
-};
+const getCacheStages = ({ imageName, cacheStageTarget, buildParams }) => {
+  if (cacheStageTarget) {
+    return [
+      {
+        name: cacheImageName || `${imageName}:cache-${cacheStageTarget}`,
+        target: cacheStageTarget
+      }
+    ]
+  } else {
+    const buildParamsArgv = minimist([buildParams]);
+    const stages = tryFindStages(buildParamsArgv.dockerfile)
+
+    return stages.map(stage => ({
+      name: `${imageName}:cache-${stage}`,
+      target: stage
+    }))
+  }
+}
 
 const getCommands = (inputs) => {
   let params = { ...inputs };
-  const buildParams = minimist([inputs.buildParams]);
-  params.cacheStageTarget = params.cacheStageTarget || tryFindStages(buildParams.dockerfile)[0]
-  params.cacheImageName = getCacheImageName(params)
+  params.cacheStages = getCacheStages(params)
   params.imageTag = params.imageTag || `${new Date().getTime()}`
 
   const multiStage = isMultiStage(params);
@@ -1304,25 +1313,50 @@ const getCommands = (inputs) => {
   return commands
 }
 
+const parseCommands = (commands) => {
+  const pullCommands = []
+  const buildCommands = []
+  const pushCommands = []
+
+  commands.forEach(command => {
+    if (/docker pull/.test(command)) {
+      pullCommands.push(command)
+    } else if (/docker build/.test(command)) {
+      buildCommands.push(command)
+    } else {
+      pushCommands.push(command)
+    }
+  })
+
+  return { pullCommands, buildCommands, pushCommands }
+}
+
 const dockerBuild = async function(inputs) {
   const commands = getCommands(inputs)
   console.log(commands)
 
-  const [pullImage, ...syncCommands] = commands;
-
+  const { pullCommands, buildCommands, pushCommands } = parseCommands(commands)
   // skip fail
   try {
-    await exec.exec(pullImage);
+    for (let i = 0; i < pullCommands.length; i++) {
+      const command = pullCommands[i];
+      await exec.exec(command);
+    }
   } catch {}
 
   // sync execute
-  for (let i = 0; i < syncCommands.length; i++) {
-    const command = syncCommands[i];
+  for (let i = 0; i < buildCommands.length; i++) {
+    const command = buildCommands[i];
+    await exec.exec(command);
+  }
+
+  for (let i = 0; i < pushCommands.length; i++) {
+    const command = pushCommands[i];
     await exec.exec(command);
   }
 };
 
-module.exports = { dockerBuild, tryFindStages, getCommands };
+module.exports = { dockerBuild, tryFindStages, getCommands, parseCommands };
 
 
 /***/ }),
