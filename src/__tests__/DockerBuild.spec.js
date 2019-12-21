@@ -41,7 +41,7 @@ describe("dockerBuildMultistageCache", () => {
   let params = {
     imageName: "image-name",
     imageTag: "v1",
-    cacheImageName: "image-name:cache-builder",
+    cacheStages: [{ name: "image-name:cache-builder", target: "builder" }],
     cacheStageTarget: "builder",
     buildParams: "--dockerfile Dockerfile.dev"
   };
@@ -52,8 +52,7 @@ describe("dockerBuildMultistageCache", () => {
     expect(commands).toMatchInlineSnapshot(`
       Array [
         "docker pull image-name:cache-builder",
-        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name:cache-builder       --target builder       -t image-name:cache-builder     .",
-        "docker build       --dockerfile Dockerfile.dev       --cache-from=image-name:cache-builder       --cache-from=image-name       -t image-name       -t image-name:v1     .",
+        "docker build   --dockerfile Dockerfile.dev   --cache-from=image-name:cache-builder   --target builder   -t image-name:cache-builder .",
         "docker push image-name:cache-builder",
         "docker push image-name:v1",
         "docker push image-name",
