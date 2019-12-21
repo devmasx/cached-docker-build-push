@@ -6,7 +6,7 @@ const {
   dockerBuildMultistageCache
 } = require("./DockerBuild");
 
-const isMultiStage = params => params.cacheStageTarget;
+const isMultiStage = params => params.cacheStages.length > 1;
 
 const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   const fileContent = fs.readFileSync(dockerfilePath, 'utf8')
@@ -20,15 +20,28 @@ const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   return stageName
 }
 
-const getCacheImageName = ({ cacheImageName, imageName, cacheStageTarget }) => {
-  return cacheImageName || `${imageName}:cache-${cacheStageTarget}`;
-};
+const getCacheStages = ({ imageName, cacheStageTarget, buildParams }) => {
+  if (cacheStageTarget) {
+    return [
+      {
+        name: cacheImageName || `${imageName}:cache-${cacheStageTarget}`,
+        target: cacheStageTarget
+      }
+    ]
+  } else {
+    const buildParamsArgv = minimist([buildParams]);
+    const stages = tryFindStages(buildParamsArgv.dockerfile)
+
+    return stages.map(stage => ({
+      name: `${imageName}:cache-${stage}`,
+      target: stage
+    }))
+  }
+}
 
 const getCommands = (inputs) => {
   let params = { ...inputs };
-  const buildParams = minimist([inputs.buildParams]);
-  params.cacheStageTarget = params.cacheStageTarget || tryFindStages(buildParams.dockerfile)[0]
-  params.cacheImageName = getCacheImageName(params)
+  params.cacheStages = getCacheStages(params)
   params.imageTag = params.imageTag || `${new Date().getTime()}`
 
   const multiStage = isMultiStage(params);
