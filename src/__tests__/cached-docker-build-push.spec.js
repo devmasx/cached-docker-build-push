@@ -34,6 +34,7 @@ describe("getCommands", () => {
         "docker pull image-name:cache-test",
         "docker build     --dockerfile=src/__tests__/fixtures/Dockerfile.dev     --cache-from=image-name:cache-builder --cache-from=image-name:cache-test     --target builder     -t image-name:cache-builder   .",
         "docker build     --dockerfile=src/__tests__/fixtures/Dockerfile.dev     --cache-from=image-name:cache-builder --cache-from=image-name:cache-test     --target test     -t image-name:cache-test   .",
+        "docker build       --dockerfile=src/__tests__/fixtures/Dockerfile.dev       --cache-from=image-name:cache-builder --cache-from=image-name:cache-test       -t image-name       -t image-name:v1     .",
         "docker push image-name:cache-builder",
         "docker push image-name:cache-test",
         "docker push image-name:v1",
