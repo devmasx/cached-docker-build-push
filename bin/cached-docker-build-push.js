@@ -11,7 +11,7 @@ if (argv.help || Object.keys(argv).length == 1) {
       Image name, required
 
       --image-tag
-      Image tag, required
+      Image tag, default timestamp in int
 
       --build-params
       Add any docker build flag, --build-params="--build-arg=TOKEN=$TOKEN"

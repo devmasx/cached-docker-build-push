@@ -65,7 +65,7 @@ docker push image-name
 
 ## Docker build with multi stage
 
-With multi stage we need to save the builder stage for use as cache. Use the flag `--cache-stage-target` for define the builder stage
+With multi stage we need to save the builder stage for use as cache. All stages are build and push by default, or set the target using `--cache-stage-target`.
 
 ```
 npx cached-docker-build-push --cache-stage-target=builder --image-name image-name --image-tag v1
