@@ -648,7 +648,7 @@ const dockerBuildCache = ({ imageName, imageTag, buildParams = "" }) => {
   ];
 };
 
-const cacheFroms = (cacheStages, imageName) => [...cacheStages.map(({ name }) => `--cache-from=${name}`), `--cache-from=${imageName}`].join(' ')
+const cacheFroms = (cacheStages, imageName) => cacheStages.map(({ name }) => `--cache-from=${name}`).join(' ')
 
 const dockerBuildCacheStep = ({ target, name }, { imageName, buildParams, cacheStages }) => {
 
@@ -672,7 +672,7 @@ const dockerBuildMultistageCache = ({
     ...cacheStages.map(it => dockerBuildCacheStep(it, { imageName, buildParams, cacheStages })),
     `docker build \
       ${buildParams} \
-      ${cacheFroms(cacheStages, imageName)} \
+      ${cacheFroms(cacheStages, imageName)} --cache-from=${imageName} \
       -t ${imageName} \
       -t ${imageName}:${imageTag} \
     .`,
@@ -1272,11 +1272,13 @@ const {
   dockerBuildMultistageCache
 } = __webpack_require__(103);
 
-const isMultiStage = params => params.cacheStages.length > 1;
+const isMultiStage = params => params.cacheStages.length >= 1;
 
 const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   const fileContent = fs.readFileSync(dockerfilePath, 'utf8')
   const stageName = fileContent.split(/\n/).reduce((memo, it) => {
+    if (it[0] && it[0].trim() && it[0] == '#') return memo
+
     let match = /FROM/.test(it) && it.match(/(?<=(as|AS) ).*$/);
     if (match) {
       memo.push(match[0])
