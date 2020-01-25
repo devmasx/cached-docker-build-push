@@ -6,7 +6,7 @@ const {
   dockerBuildMultistageCache
 } = require("./DockerBuild");
 
-const isMultiStage = params => params.cacheStages.length > 1;
+const isMultiStage = params => params.cacheStages.length >= 1;
 
 const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   const fileContent = fs.readFileSync(dockerfilePath, 'utf8')
@@ -33,6 +33,7 @@ const getCacheStages = ({ imageName, cacheStageTarget, buildParams }) => {
   } else {
     const buildParamsArgv = minimist([buildParams]);
     const stages = tryFindStages(buildParamsArgv.dockerfile)
+    console.log("stages", stages)
 
     return stages.map(stage => ({
       name: `${imageName}:cache-${stage}`,
@@ -47,6 +48,7 @@ const getCommands = (inputs) => {
   params.imageTag = params.imageTag || `${new Date().getTime()}`
 
   const multiStage = isMultiStage(params);
+  console.log(multiStage, params)
   let commands = [];
 
   if (multiStage) {

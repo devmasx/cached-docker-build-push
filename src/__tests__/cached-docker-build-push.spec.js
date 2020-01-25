@@ -43,6 +43,25 @@ describe("getCommands", () => {
       ]
     `);
   });
+
+  it("multistage infered", () => {
+    const commands = getCommands({
+      imageName: "image-name",
+      buildParams: "--dockerfile=src/__tests__/fixtures/Dockerfile",
+      imageTag: "v1"
+    });
+    expect(commands).toMatchInlineSnapshot(`
+      Array [
+        "docker pull image-name",
+        "docker pull image-name:cache-builder",
+        "docker build     --dockerfile=src/__tests__/fixtures/Dockerfile     --cache-from=image-name:cache-builder --cache-from=image-name     --target builder     -t image-name:cache-builder   .",
+        "docker build       --dockerfile=src/__tests__/fixtures/Dockerfile       --cache-from=image-name:cache-builder --cache-from=image-name       -t image-name       -t image-name:v1     .",
+        "docker push image-name:cache-builder",
+        "docker push image-name:v1",
+        "docker push image-name",
+      ]
+    `);
+  });
 });
 
 describe("parseCommands", () => {
