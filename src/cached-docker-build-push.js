@@ -11,6 +11,8 @@ const isMultiStage = params => params.cacheStages.length > 1;
 const tryFindStages = (dockerfilePath = "./Dockerfile") => {
   const fileContent = fs.readFileSync(dockerfilePath, 'utf8')
   const stageName = fileContent.split(/\n/).reduce((memo, it) => {
+    if (it[0] && it[0].trim() && it[0] == '#') return memo
+
     let match = /FROM/.test(it) && it.match(/(?<=(as|AS) ).*$/);
     if (match) {
       memo.push(match[0])
