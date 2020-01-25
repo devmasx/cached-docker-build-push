@@ -33,7 +33,6 @@ const getCacheStages = ({ imageName, cacheStageTarget, buildParams }) => {
   } else {
     const buildParamsArgv = minimist([buildParams]);
     const stages = tryFindStages(buildParamsArgv.dockerfile)
-    console.log("stages", stages)
 
     return stages.map(stage => ({
       name: `${imageName}:cache-${stage}`,
@@ -48,7 +47,6 @@ const getCommands = (inputs) => {
   params.imageTag = params.imageTag || `${new Date().getTime()}`
 
   const multiStage = isMultiStage(params);
-  console.log(multiStage, params)
   let commands = [];
 
   if (multiStage) {
