@@ -12,7 +12,7 @@ const dockerBuildCache = ({ imageName, imageTag, buildParams = "" }) => {
   ];
 };
 
-const cacheFroms = (cacheStages, imageName) => [...cacheStages.map(({ name }) => `--cache-from=${name}`), `--cache-from=${imageName}`].join(' ')
+const cacheFroms = (cacheStages, imageName) => cacheStages.map(({ name }) => `--cache-from=${name}`).join(' ')
 
 const dockerBuildCacheStep = ({ target, name }, { imageName, buildParams, cacheStages }) => {
 
@@ -36,7 +36,7 @@ const dockerBuildMultistageCache = ({
     ...cacheStages.map(it => dockerBuildCacheStep(it, { imageName, buildParams, cacheStages })),
     `docker build \
       ${buildParams} \
-      ${cacheFroms(cacheStages, imageName)} \
+      ${cacheFroms(cacheStages, imageName)} --cache-from=${imageName} \
       -t ${imageName} \
       -t ${imageName}:${imageTag} \
     .`,
