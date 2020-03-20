@@ -35,6 +35,7 @@ jobs:
           npm run build
           git config --global user.email "githubaction@example.com"
           git config --global user.name "Auto commit"
+          git add .
           git commit -m "Auto build"
           git push origin test-commit
       - name: Publish to Npm
