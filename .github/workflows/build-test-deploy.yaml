@@ -31,6 +31,9 @@ jobs:
       - name: Test
         run: |
           npm test
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.1
+        with:
+          commit_message: Auto build
       - name: Publish to Npm
         if: contains(github.ref, 'refs/tags/v')
         run: |
