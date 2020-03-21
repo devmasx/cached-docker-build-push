@@ -31,23 +31,29 @@ jobs:
       - name: Test
         run: |
           npm test
-      - run: |
-          npm run build
-          cat <<- EOF > $HOME/.netrc
-            machine github.com
-            login $GITHUB_ACTOR
-            password $GITHUB_TOKEN
-          EOF
+      # - run: |
+      #     npm run build
+      #     cat <<- EOF > $HOME/.netrc
+      #       machine github.com
+      #       login $GITHUB_ACTOR
+      #       password $GITHUB_TOKEN
+      #     EOF
 
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
+      #     git config --global user.email "actions@github.com"
+      #     git config --global user.name "GitHub Actions"
 
-          git fetch origin
-          git checkout test-commit
-          git add .
-          git commit -m "Auto build"
-          git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/devmasx/cached-docker-build-push.git
-          git push origin test-commit
+      #     git fetch origin
+      #     git checkout test-commit
+      #     git add .
+      #     git commit -m "Auto build"
+      #     git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/devmasx/cached-docker-build-push.git
+      #     git push origin test-commit
+      - uses: stefanzweifel/git-auto-commit-action@v2.5.0
+        with:
+          commit_message: Auto build
+          branch: ${{ github.head_ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to Npm
         if: contains(github.ref, 'refs/tags/v')
         run: |

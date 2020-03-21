@@ -9,7 +9,7 @@
     "/dist"
   ],
   "dependencies": {
-    "@actions/exec": "^1.0.1",
+    "@actions/exec": "^1.0.3",
     "@octokit/rest": "^17.1.1",
     "minimist": "^1.2.0"
   },
