@@ -48,7 +48,7 @@ jobs:
       #     git commit -m "Auto build"
       #     git remote set-url origin https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/devmasx/cached-docker-build-push.git
       #     git push origin test-commit
-      - uses: devmasx/git-auto-commit-action@master
+      - uses: devmasx/git-auto-commit-action@dev
         with:
           commit_message: Auto build.
           branch: $GITHUB_REF
