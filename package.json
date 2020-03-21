@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "@actions/exec": "^1.0.1",
+    "@octokit/rest": "^17.1.1",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
