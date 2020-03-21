@@ -34,7 +34,6 @@ jobs:
       - uses: devmasx/git-auto-commit-action@dev
         with:
           commit_message: Auto build.
-          branch: $GITHUB_REF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to Npm
