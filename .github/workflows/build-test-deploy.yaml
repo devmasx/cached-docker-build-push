@@ -50,7 +50,7 @@ jobs:
       #     git push origin test-commit
       - uses: devmasx/git-auto-commit-action@master
         with:
-          commit_message: Auto build
+          commit_message: Auto build .
           branch: $GITHUB_REF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
