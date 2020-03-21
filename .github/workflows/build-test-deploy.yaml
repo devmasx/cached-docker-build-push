@@ -37,9 +37,6 @@ jobs:
             machine github.com
             login $GITHUB_ACTOR
             password $GITHUB_TOKEN
-            machine api.github.com
-            login $GITHUB_ACTOR
-            password $GITHUB_TOKEN
           EOF
 
           git config --global user.email "actions@github.com"
@@ -49,6 +46,8 @@ jobs:
           git checkout test-commit
           git add .
           git commit -m "Auto build"
+          git remote set-url origin https://devmasx:$GITHUB_TOKEN@github.com/devmasx/cached-docker-build-push.git
+
           git push origin test-commit
       - name: Publish to Npm
         if: contains(github.ref, 'refs/tags/v')
