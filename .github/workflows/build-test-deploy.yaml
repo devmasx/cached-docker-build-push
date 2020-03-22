@@ -36,6 +36,7 @@ jobs:
           commit_message: Auto build.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: exit 1
       - name: Publish to Npm
         if: contains(github.ref, 'refs/tags/v')
         run: |
