@@ -26,5 +26,5 @@ if [ ! -z $INPUT_PUSH ]; then
   PARAMS="${PARAMS} --push"
 fi
 
-echo $PARAMS
-cached-docker $PARAMS
+echo "cached-docker ${PARAMS}"
+cached-docker ${PARAMS}
