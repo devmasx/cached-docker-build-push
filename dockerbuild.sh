@@ -1,8 +1,7 @@
 PARAMS=""
-[ ! -z "$INPUT_IMAGE_NAME" ] && PARAMS="${PARAMS} --image-name=${INPUT_IMAGE_NAME} "
 
-if [ ! -z  ]; then
-  PARAMS+=" --image-name $INPUT_IMAGE_NAME"
+if [ ! -z "$INPUT_IMAGE_NAME" ]; then
+  PARAMS="${PARAMS} --image-name=${INPUT_IMAGE_NAME}"
 fi
 
 if [ ! -z $INPUT_IMAGE_TAG ]; then
