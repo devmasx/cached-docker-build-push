@@ -1,10 +1,9 @@
-FROM node:lts-alpine
+FROM docker:stable
+RUN apk add libevent pcre libgcc git
 
-WORKDIR /app
-COPY package.json package-lock.json /app/
-RUN npm ci
+RUN git clone https://github.com/devmasx/cached-docker ~/.cached-docker
+RUN cp ~/.cached-docker/releases/linux/cached-docker /usr/local/bin/cached-docker
+WORKDIR /action
+COPY dockerbuild.sh /action/
 
-COPY . .
-
-CMD ["sh"]
-# CMD ["node", "/app/bin/cached-docker-build-push.js"]
+CMD /action/dockerbuild.sh

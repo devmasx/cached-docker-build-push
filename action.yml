@@ -17,8 +17,8 @@ inputs:
     description: "Add any docker build flag, --build-params='--build-arg=TOKEN=$TOKEN'"
     required: false
 runs:
-  using: "node12"
-  main: "dist/index.js"
+  using: 'docker'
+  image: 'Dockerfile'
 branding:
   icon: "package"
   color: "blue"
