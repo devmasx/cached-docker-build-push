@@ -7,18 +7,21 @@ inputs:
   image_tag:
     description: "Image tag, default $GITHUB_SHA"
     required: false
-  cache_image_name:
-    description: "Image name for the cache image, default $IMAGE_NAME:cache-$CACHE_STAGE_TARGET"
-    required: false
   cache_stage_target:
     description: "Name of the stage target for use in cache, two images will be compiled, the stage target and the last stage."
     required: false
   build_params:
     description: "Add any docker build flag, --build-params='--build-arg=TOKEN=$TOKEN'"
     required: false
+  file:
+    description: Name of the Dockerfile (Default is 'PATH/Dockerfile')
+    required: false
+  print:
+    description: 'Only print docker commands default: false'
+    required: false
 runs:
-  using: "node12"
-  main: "dist/index.js"
+  using: 'docker'
+  image: 'Dockerfile'
 branding:
   icon: "package"
   color: "blue"
