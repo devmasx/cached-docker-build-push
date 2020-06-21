@@ -1,7 +1,16 @@
-BUILDPARAMS=${INPUT_EXTRA_BUILD_PARAMS}
-CACHE_IMAGE_NAME=${INPUT_CACHE_IMAGE_NAME}
-CACHE_STAGE_TARGET=${INPUT_CACHE_STAGE_TARGET}
-
-cached-docker \
-  -i $INPUT_IMAGE_NAME \
-  --print
+if [ ! -z $INPUT_PRINT ]; then
+  cached-docker \
+   --image-name $INPUT_IMAGE_NAME \
+   --image-tag $INPUT_IMAGE_TAG \
+   --build-params $INPUT_BUILD_PARAMS \
+   --file $INPUT_FILE \
+   --cache-stage-target $INPUT_CACHE_STAGE_TARGET \
+   --print
+else
+  cached-docker \
+   --image-name $INPUT_IMAGE_NAME \
+   --image-tag $INPUT_IMAGE_TAG \
+   --build-params $INPUT_BUILD_PARAMS \
+   --file $INPUT_FILE \
+   --cache-stage-target $INPUT_CACHE_STAGE_TARGET
+fi
