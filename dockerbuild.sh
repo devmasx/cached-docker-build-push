@@ -1,6 +1,6 @@
 PARAMS=""
 echo $INPUT_IMAGE_NAME
-[ ! -z "$INPUT_IMAGE_NAME" ] && PARAMS="$PARAMS --image-name=$INPUT_IMAGE_NAME "
+[ ! -z "$INPUT_IMAGE_NAME" ] && PARAMS="${PARAMS} --image-name=${INPUT_IMAGE_NAME} "
 
 # if [ ! -z  ]; then
 #   # PARAMS+=" --image-name $INPUT_IMAGE_NAME"
@@ -26,4 +26,5 @@ echo $INPUT_IMAGE_NAME
 #   # PARAMS+=" --push"
 # fi
 
-cached-docker --image-name $INPUT_IMAGE_NAME
+echo $PARAMS
+cached-docker $PARAMS
