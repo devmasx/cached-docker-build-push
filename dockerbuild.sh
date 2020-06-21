@@ -1,27 +1,27 @@
-args=""
+string=""
 
 if [ ! -z $INPUT_IMAGE_NAME ]; then
-  args+=" --image-name ${INPUT_IMAGE_NAME}"
+  string+=" --image-name $INPUT_IMAGE_NAME"
 fi
 
 if [ ! -z $INPUT_IMAGE_TAG ]; then
-  args+=" --image-tag ${INPUT_IMAGE_TAG}"
+  string+=" --image-tag $INPUT_IMAGE_TAG"
 fi
 
 if [ ! -z $INPUT_FILE ]; then
-  args+=" --file ${INPUT_FILE}"
+  string+=" --file $INPUT_FILE"
 fi
 
 if [ ! -z $INPUT_BUILD_PARAMS ]; then
-  args+=" --build-params ${INPUT_BUILD_PARAMS}"
+  string+=" --build-params $INPUT_BUILD_PARAMS"
 fi
 
 if [ ! -z $INPUT_PRINT ]; then
-  args+=" --print"
+  string+=" --print"
 fi
 
 if [ ! -z $INPUT_PUSH ]; then
-  args+=" --push"
+  string+=" --push"
 fi
 
-cached-docker ${args}
+echo cached-docker $string
