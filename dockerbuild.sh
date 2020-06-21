@@ -26,4 +26,4 @@ echo $INPUT_IMAGE_NAME
 #   # PARAMS+=" --push"
 # fi
 
-echo "cached-docker ${PARAMS}"
+cached-docker --image-name $INPUT_IMAGE_NAME
