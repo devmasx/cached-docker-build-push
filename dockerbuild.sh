@@ -1,17 +1,20 @@
-# if [ -z $INPUT_PRINT ] && [ -z $INPUT_FILE ]; then
+if [ -z $INPUT_FILE ]; then
+  DOCKERFILE_PATH="./Dockerfile"
+else
+  DOCKERFILE_PATH=$INPUT_FILE
+fi
+
+if [ -z $INPUT_PRINT ]; then
   cached-docker \
    --image-name $INPUT_IMAGE_NAME \
    --image-tag $INPUT_IMAGE_TAG \
-   --build-params $INPUT_BUILD_PARAMS \
-  #  --push
-  #  --cache-stage-target $INPUT_CACHE_STAGE_TARGET \
-# else
-  # cached-docker \
-  #  --image-name $INPUT_IMAGE_NAME \
-  #  --image-tag $INPUT_IMAGE_TAG \
-  #  --build-params $INPUT_BUILD_PARAMS \
-  #  --cache-stage-target $INPUT_CACHE_STAGE_TARGET
-  #  --file
-  #  --push
-  #  --print
-# fi
+   --file $DOCKERFILE_PATH \
+   --push
+else
+  cached-docker \
+   --image-name $INPUT_IMAGE_NAME \
+   --image-tag $INPUT_IMAGE_TAG \
+   --file $DOCKERFILE_PATH \
+   --push
+   --print
+fi
