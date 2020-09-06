@@ -19,6 +19,9 @@ inputs:
   print:
     description: 'Only print docker commands default: false'
     required: false
+  push:
+    description: 'Push image default: false'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
